@@ -1,0 +1,1629 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SG71 Authorization System | Professional Multi-Admin Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #4361ee;
+            --primary-dark: #3a56d4;
+            --secondary: #6c63ff;
+            --success: #06d6a0;
+            --danger: #ef476f;
+            --warning: #ffd166;
+            --dark: #1e1e2e;
+            --darker: #12121a;
+            --light: #f8f9fa;
+            --gray: #8a8a9c;
+            --card-bg: rgba(255, 255, 255, 0.07);
+            --card-border: rgba(255, 255, 255, 0.1);
+            --sidebar-width: 260px;
+            --header-height: 70px;
+            --border-radius: 12px;
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, var(--darker) 0%, var(--dark) 100%);
+            color: var(--light);
+            min-height: 100vh;
+            line-height: 1.6;
+        }
+
+        /* Login Page */
+        .login-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            width: 100%;
+            padding: 20px;
+            background: linear-gradient(135deg, var(--darker) 0%, var(--dark) 100%);
+        }
+
+        .login-card {
+            width: 100%;
+            max-width: 400px;
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--card-border);
+            border-radius: var(--border-radius);
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .login-logo {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .logo-icon {
+            width: 60px;
+            height: 60px;
+            background: var(--primary);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            margin: 0 auto;
+        }
+
+        .login-title {
+            font-size: 24px;
+            font-weight: 700;
+            text-align: center;
+            margin: 15px 0 30px;
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .form-input {
+            width: 100%;
+            background: rgba(0, 0, 0, 0.1);
+            border: 1px solid var(--card-border);
+            border-radius: var(--border-radius);
+            padding: 12px 15px;
+            color: var(--light);
+            transition: var(--transition);
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.2);
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 12px 20px;
+            border-radius: var(--border-radius);
+            border: none;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+        }
+
+        .btn-danger {
+            background: var(--danger);
+            color: white;
+        }
+
+        .btn-success {
+            background: var(--success);
+            color: white;
+        }
+
+        .btn-warning {
+            background: var(--warning);
+            color: var(--dark);
+        }
+
+        .btn-sm {
+            padding: 8px 12px;
+            font-size: 14px;
+        }
+
+        /* Main Application */
+        .app-container {
+            display: none;
+            width: 100%;
+            min-height: 100vh;
+        }
+
+        /* Header */
+        .header {
+            height: var(--header-height);
+            background: rgba(30, 30, 46, 0.5);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--card-border);
+            padding: 0 30px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .header-title {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-weight: 600;
+            font-size: 18px;
+        }
+
+        .header-title i {
+            color: var(--primary);
+        }
+
+        .user-menu {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 15px;
+        }
+
+        .header-actions button {
+            background: var(--card-bg);
+            border: none;
+            width: 40px;
+            height: 40px;
+            borderRadius: 50%;
+            color: var(--light);
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .header-actions button:hover {
+            background: var(--primary);
+        }
+
+        /* Content Area */
+        .content {
+            padding: 30px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 25px;
+        }
+
+        @media (max-width: 992px) {
+            .content {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Cards */
+        .card {
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--card-border);
+            border-radius: var(--border-radius);
+            padding: 20px;
+            transition: var(--transition);
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid var(--card-border);
+        }
+
+        .card-title {
+            font-weight: 600;
+            font-size: 18px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .card-title i {
+            color: var(--primary);
+        }
+
+        /* Tables */
+        .table-container {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
+
+        .table-header {
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid var(--card-border);
+        }
+
+        .table-title {
+            font-weight: 600;
+            font-size: 18px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 15px 20px;
+            text-align: left;
+            border-bottom: 1px solid var(--card-border);
+        }
+
+        th {
+            font-weight: 500;
+            color: var(--gray);
+            background: rgba(0, 0, 0, 0.1);
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        tr:hover {
+            background: rgba(67, 97, 238, 0.05);
+        }
+
+        /* Forms */
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        /* Status badges */
+        .badge {
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .badge-success {
+            background: rgba(6, 214, 160, 0.2);
+            color: var(--success);
+        }
+
+        .badge-danger {
+            background: rgba(239, 71, 111, 0.2);
+            color: var(--danger);
+        }
+
+        .badge-warning {
+            background: rgba(255, 209, 102, 0.2);
+            color: var(--warning);
+        }
+
+        /* Button Groups */
+        .btn-group {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin: 15px 0;
+        }
+
+        /* Notifications */
+        .notification {
+            padding: 15px;
+            border-radius: var(--border-radius);
+            margin: 15px 0;
+            display: none;
+        }
+
+        .notification-success {
+            background: rgba(6, 214, 160, 0.2);
+            color: var(--success);
+            border: 1px solid rgba(6, 214, 160, 0.3);
+        }
+
+        .notification-error {
+            background: rgba(239, 71, 111, 0.2);
+            color: var(--danger);
+            border: 1px solid rgba(239, 71, 111, 0.3);
+        }
+
+        /* Stats */
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin: 15px 0;
+        }
+
+        .stat-card {
+            background: rgba(0, 0, 0, 0.1);
+            padding: 15px;
+            border-radius: var(--border-radius);
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 24px;
+            font-weight: 700;
+            margin: 5px 0;
+            color: var(--primary);
+        }
+
+        .stat-label {
+            color: var(--gray);
+            font-size: 14px;
+        }
+
+        /* App Info Panel */
+        .app-info-panel {
+            background: rgba(0, 0, 0, 0.1);
+            border-radius: var(--border-radius);
+            padding: 15px;
+            margin-bottom: 20px;
+            border: 1px solid var(--card-border);
+        }
+
+        .app-info-row {
+            display: flex;
+            margin-bottom: 10px;
+            align-items: center;
+        }
+
+        .app-info-label {
+            font-weight: 600;
+            min-width: 120px;
+            color: var(--primary);
+        }
+
+        .app-info-value {
+            flex: 1;
+            word-break: break-all;
+        }
+
+        /* Utilities */
+        .text-primary { color: var(--primary); }
+        .text-danger { color: var(--danger); }
+        .text-success { color: var(--success); }
+        .text-warning { color: var(--warning); }
+        .text-gray { color: var(--gray); }
+
+        .mt-20 { margin-top: 20px; }
+        .mb-20 { margin-bottom: 20px; }
+
+        /* Tabs */
+        .tab-container {
+            display: flex;
+            border-bottom: 1px solid var(--card-border);
+            margin-bottom: 25px;
+            padding: 0 30px;
+        }
+        
+        .tab {
+            padding: 15px 25px;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+            font-weight: 500;
+            transition: var(--transition);
+        }
+        
+        .tab.active {
+            border-bottom: 3px solid var(--primary);
+            color: var(--primary);
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+
+        /* Admin badge */
+        .admin-badge {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            margin-left: 8px;
+            background: var(--primary);
+            color: white;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header {
+                padding: 0 15px;
+            }
+            .content {
+                padding: 15px;
+            }
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+            .tab-container {
+                padding: 0 15px;
+            }
+            .tab {
+                padding: 10px 15px;
+                font-size: 14px;
+            }
+            .app-info-row {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .app-info-label {
+                margin-bottom: 5px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Login Page -->
+    <div id="loginPage" class="login-container">
+        <div class="login-card">
+            <div class="login-logo">
+                <div class="logo-icon">
+                    <i class="fas fa-shield-alt"></i>
+                </div>
+                <h1 class="login-title">SG71 Auth System</h1>
+            </div>
+            
+            <div id="loginNotification" class="notification notification-error">
+                Invalid email or password. Please try again.
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label"><i class="fas fa-envelope"></i> Email Address</label>
+                <input type="email" class="form-input" id="loginEmail" placeholder="Enter your email">
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label"><i class="fas fa-lock"></i> Password</label>
+                <input type="password" class="form-input" id="loginPassword" placeholder="Enter your password">
+            </div>
+            
+            <button class="btn btn-primary" id="btnLogin" style="width: 100%">
+                <i class="fas fa-sign-in-alt"></i> Sign In
+            </button>
+            
+            <div class="mt-20" style="text-align: center; color: var(--gray);">
+                <p>Demo: admin@sg71.com / admin123</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Application -->
+    <div id="appPage" class="app-container">
+        <!-- Header -->
+        <div class="header">
+            <div class="header-title">
+                <i class="fas fa-shield-alt"></i>
+                SG71 Authorization System <span id="currentFile">— No App Selected</span>
+            </div>
+            
+            <div class="user-menu">
+                <div class="header-actions">
+                    <button id="themeToggle"><i class="fas fa-moon"></i></button>
+                    <button id="logoutBtn"><i class="fas fa-sign-out-alt"></i></button>
+                </div>
+                
+                <div class="user-info">
+                    <div class="user-avatar">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <div>
+                        <div>Admin User</div>
+                        <div class="text-gray" id="userEmail">admin@sg71.com</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Tabs -->
+        <div class="tab-container">
+            <div class="tab active" data-tab="apps">Applications</div>
+            <div class="tab" data-tab="admin">Admin Management</div>
+        </div>
+        
+        <!-- Tab Contents -->
+        <div class="tab-content active" id="appsTab">
+            <div class="content">
+                <!-- Application Management -->
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title"><i class="fas fa-cogs"></i> Application Management</div>
+                    </div>
+                    
+                    <!-- App Info Panel -->
+                    <div id="appInfoPanel" class="app-info-panel" style="display: none;">
+                        <div class="app-info-row">
+                            <div class="app-info-label">App Name:</div>
+                            <div class="app-info-value" id="infoAppName">-</div>
+                        </div>
+                        <div class="app-info-row">
+                            <div class="app-info-label">Owner:</div>
+                            <div class="app-info-value" id="infoOwner">-</div>
+                        </div>
+                        <div class="app-info-row">
+                            <div class="app-info-label">App ID :</div>
+                            <div class="app-info-value" id="infoCollection">-</div>
+                        </div>
+                    </div>
+                    
+                    <input type="text" class="form-input mb-20" id="fileName" placeholder="Application name">
+                    
+                    <div class="btn-group">
+                        <button class="btn btn-primary" id="btnCreateFile"><i class="fas fa-plus"></i> Create</button>
+                        <button class="btn btn-primary" id="btnRefreshFiles"><i class="fas fa-sync-alt"></i> Refresh</button>
+                        <button class="btn btn-danger" id="btnDeleteFile" disabled><i class="fas fa-trash"></i> Delete</button>
+                    </div>
+                    
+                    <div class="btn-group">
+                        <button class="btn btn-warning" id="btnPause"><i class="fas fa-pause"></i> Pause</button>
+                        <button class="btn btn-success" id="btnResume"><i class="fas fa-play"></i> Resume</button>
+                    </div>
+                    
+                    <div class="table-container">
+                        <div class="table-header">
+                            <div class="table-title"><i class="fas fa-list"></i> Applications</div>
+                        </div>
+                        
+                        <table id="filesTable">
+                            <thead>
+                                <tr>
+                                    <th>App</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Will be populated by JavaScript -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                
+                <!-- User Management -->
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title"><i class="fas fa-users"></i> User Management</div>
+                    </div>
+                    
+                    <div class="stats">
+                        <div class="stat-card">
+                            <div class="stat-value" id="statTotal">0</div>
+                            <div class="stat-label">Total Users</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value" id="statActive">0</div>
+                            <div class="stat-label">Active</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value" id="statBanned">0</div>
+                            <div class="stat-label">Banned</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value" id="statExpired">0</div>
+                            <div class="stat-label">Expired</div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <input type="text" class="form-input" id="username" placeholder="Username">
+                        <input type="password" class="form-input" id="password" placeholder="Password">
+                    </div>
+                    
+                    <div class="form-row">
+                        <input type="date" class="form-input" id="expires">
+                        <input type="text" class="form-input" id="hwid" placeholder="HWID (optional)">
+                    </div>
+                    
+                    <div class="btn-group">
+                        <button class="btn btn-primary" id="btnAdd"><i class="fas fa-plus"></i> Add</button>
+                        <button class="btn btn-primary" id="btnUpdate" disabled><i class="fas fa-edit"></i> Update</button>
+                        <button class="btn btn-danger" id="btnDelete" disabled><i class="fas fa-trash"></i> Delete</button>
+                    </div>
+                    
+                    <div class="btn-group">
+                        <button class="btn btn-primary" id="btnResetHWID" disabled><i class="fas fa-key"></i> Reset HWID</button>
+                        <button class="btn btn-danger" id="btnBan" disabled><i class="fas fa-ban"></i> Ban</button>
+                        <button class="btn btn-success" id="btnUnban" disabled><i class="fas fa-check-circle"></i> Unban</button>
+                    </div>
+                    
+                    <input type="text" class="form-input mb-20" id="search" placeholder="Search user...">
+                    
+                    <div id="userNotification" class="notification notification-success">
+                        User operation completed successfully.
+                    </div>
+                    
+                    <div class="table-container">
+                        <div class="table-header">
+                            <div class="table-title"><i class="fas fa-users"></i> Users</div>
+                            <div>Total: <span id="userCount">0</span></div>
+                        </div>
+                        
+                        <table id="usersTable">
+                            <thead>
+                                <tr>
+                                    <th>Username</th>
+                                    <th>HWID</th>
+                                    <th>Expires</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Will be populated by JavaScript -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="tab-content" id="adminTab">
+            <div class="content">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title"><i class="fas fa-user-shield"></i> Admin Management</div>
+                    </div>
+                    
+                    <div id="adminNotification" class="notification notification-success">
+                        Admin operation completed successfully.
+                    </div>
+                    
+                    <div class="form-row">
+                        <input type="email" class="form-input" id="adminEmail" placeholder="Admin email">
+                        <input type="password" class="form-input" id="adminPassword" placeholder="Password">
+                    </div>
+                    
+                    <select class="form-input" id="adminRoleSelect">
+                        <option value="admin">Administrator</option>
+                        <option value="moderator">Moderator</option>
+                    </select>
+                    
+                    <div class="btn-group">
+                        <button class="btn btn-primary" id="btnAddAdmin"><i class="fas fa-plus"></i> Add Admin</button>
+                        <button class="btn btn-primary" id="btnUpdateAdmin" disabled><i class="fas fa-edit"></i> Update Role</button>
+                        <button class="btn btn-danger" id="btnDeleteAdmin" disabled><i class="fas fa-trash"></i> Remove Admin</button>
+                    </div>
+                    
+                    <div class="table-container">
+                        <div class="table-header">
+                            <div class="table-title"><i class="fas fa-list"></i> Administrators</div>
+                        </div>
+                        
+                        <table id="adminTable">
+                            <thead>
+                                <tr>
+                                    <th>Email</th>
+                                    <th>Role</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Will be populated by JavaScript -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Firebase SDK -->
+    <script type="module">
+        // Import Firebase modules
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
+        import { 
+            getAuth, 
+            signInWithEmailAndPassword, 
+            onAuthStateChanged, 
+            signOut,
+            createUserWithEmailAndPassword,
+            updatePassword
+        } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
+        import { 
+            getFirestore, 
+            collection, 
+            doc, 
+            getDocs, 
+            getDoc, 
+            setDoc, 
+            deleteDoc,
+            updateDoc,
+            query,
+            where,
+            orderBy,
+            serverTimestamp
+        } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
+
+        // Firebase config
+        const firebaseConfig = {
+            apiKey: "AIzaSyBOz_5UptcilUG0F-V_9XKa2FdeSB0j7lo",
+            authDomain: "sg71-auth-system.firebaseapp.com",
+            projectId: "sg71-auth-system",
+            storageBucket: "sg71-auth-system.appspot.com",
+            messagingSenderId: "319458724065",
+            appId: "1:319458724065:web:66bab397bc149b9e14cfa0",
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        // DOM Elements
+        const loginPage = document.getElementById('loginPage');
+        const appPage = document.getElementById('appPage');
+        const loginEmail = document.getElementById('loginEmail');
+        const loginPassword = document.getElementById('loginPassword');
+        const loginNotification = document.getElementById('loginNotification');
+        const btnLogin = document.getElementById('btnLogin');
+        const themeToggle = document.getElementById('themeToggle');
+        const logoutBtn = document.getElementById('logoutBtn');
+        const userEmail = document.getElementById('userEmail');
+
+        const usersTableBody = document.querySelector('#usersTable tbody');
+        const filesTableBody = document.querySelector('#filesTable tbody');
+        const userCount = document.querySelector('#userCount');
+        const currentFile = document.querySelector('#currentFile');
+        const inpUsername = document.querySelector('#username');
+        const inpPassword = document.querySelector('#password');
+        const inpExpires = document.querySelector('#expires');
+        const inpHwid = document.querySelector('#hwid');
+        const inpSearch = document.querySelector('#search');
+        const btnAdd = document.querySelector('#btnAdd');
+        const btnUpdate = document.querySelector('#btnUpdate');
+        const btnDelete = document.querySelector('#btnDelete');
+        const btnBan = document.querySelector('#btnBan');
+        const btnUnban = document.querySelector('#btnUnban');
+        const btnResetHWID = document.querySelector('#btnResetHWID');
+        const btnCreateFile = document.querySelector('#btnCreateFile');
+        const inpFileName = document.querySelector('#fileName');
+        const btnDeleteFile = document.querySelector('#btnDeleteFile');
+        const btnRefreshFiles = document.querySelector('#btnRefreshFiles');
+        const btnPause = document.querySelector('#btnPause');
+        const btnResume = document.querySelector('#btnResume');
+        const userNotification = document.querySelector('#userNotification');
+        const statTotal = document.querySelector('#statTotal');
+        const statActive = document.querySelector('#statActive');
+        const statBanned = document.querySelector('#statBanned');
+        const statExpired = document.querySelector('#statExpired');
+
+        // Admin management elements
+        const tabs = document.querySelectorAll('.tab');
+        const tabContents = document.querySelectorAll('.tab-content');
+        const adminEmail = document.getElementById('adminEmail');
+        const adminPassword = document.getElementById('adminPassword');
+        const adminRoleSelect = document.getElementById('adminRoleSelect');
+        const btnAddAdmin = document.getElementById('btnAddAdmin');
+        const btnUpdateAdmin = document.getElementById('btnUpdateAdmin');
+        const btnDeleteAdmin = document.getElementById('btnDeleteAdmin');
+        const adminTableBody = document.querySelector('#adminTable tbody');
+        const adminNotification = document.getElementById('adminNotification');
+
+        // App info elements
+        const appInfoPanel = document.getElementById('appInfoPanel');
+        const infoAppName = document.getElementById('infoAppName');
+        const infoOwner = document.getElementById('infoOwner');
+        const infoCollection = document.getElementById('infoCollection');
+
+        let selectedFile = null, selectedUsername = null, filterText = "";
+        let currentUser = null;
+        let currentAdminRole = "user";
+        let selectedAdmin = null;
+
+        // Tab functionality
+        tabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                const tabId = tab.getAttribute('data-tab');
+                
+                // Update active tab
+                tabs.forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+                
+                // Show correct content
+                tabContents.forEach(content => {
+                    content.classList.remove('active');
+                    if (content.id === `${tabId}Tab`) {
+                        content.classList.add('active');
+                    }
+                });
+            });
+        });
+
+        // Firestore functions with multi-admin support
+        const ls = {
+            async readAllFiles(adminId) {
+                const snap = await getDocs(collection(db, "admins", adminId, "apps"));
+                return snap.docs.map(docSnap => ({ 
+                    name: docSnap.id, 
+                    data: docSnap.data() 
+                }));
+            },
+            
+            async readFile(adminId, name) {
+                const docSnap = await getDoc(doc(db, "admins", adminId, "apps", name));
+                if (!docSnap.exists()) return { users: [] };
+                return docSnap.data();
+            },
+            
+            async writeFile(adminId, name, payload) {
+                await setDoc(doc(db, "admins", adminId, "apps", name), payload);
+            },
+            
+            async deleteFile(adminId, name) {
+                await deleteDoc(doc(db, "admins", adminId, "apps", name));
+            },
+            
+            async updateFile(adminId, name, updates) {
+                await updateDoc(doc(db, "admins", adminId, "apps", name), updates);
+            },
+            
+            // Admin management functions
+            async getAdmins() {
+                const snap = await getDocs(collection(db, "admins"));
+                const admins = [];
+                
+                for (const docSnap of snap.docs) {
+                    const adminData = docSnap.data();
+                    admins.push({
+                        id: docSnap.id,
+                        email: adminData.email,
+                        role: adminData.role || "moderator",
+                        createdAt: adminData.createdAt
+                    });
+                }
+                
+                return admins;
+            },
+            
+            async addAdmin(email, password, role) {
+                // Create auth user first
+                const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+                
+                // Then add to admins collection
+                await setDoc(doc(db, "admins", userCredential.user.uid), {
+                    email: email,
+                    role: role,
+                    createdAt: serverTimestamp()
+                });
+                
+                return userCredential.user;
+            },
+            
+            async updateAdmin(adminId, updates) {
+                await updateDoc(doc(db, "admins", adminId), updates);
+            },
+            
+            async deleteAdmin(adminId) {
+                await deleteDoc(doc(db, "admins", adminId));
+            },
+            
+            async getAdmin(adminId) {
+                const docSnap = await getDoc(doc(db, "admins", adminId));
+                if (!docSnap.exists()) return null;
+                return { id: docSnap.id, ...docSnap.data() };
+            }
+        };
+
+        // Utility functions
+        function showNotification(element, message, isError = false) {
+            element.textContent = message;
+            element.style.display = 'block';
+            if (isError) {
+                element.classList.remove('notification-success');
+                element.classList.add('notification-error');
+            } else {
+                element.classList.remove('notification-error');
+                element.classList.add('notification-success');
+            }
+            
+            setTimeout(() => {
+                element.style.display = 'none';
+            }, 3000);
+        }
+
+        function setUserBtnsEnabled(en) {
+            [btnUpdate, btnDelete, btnBan, btnUnban, btnResetHWID].forEach(b => b.disabled = !en);
+        }
+
+        function clearUserForm() {
+            inpUsername.value = '';
+            inpPassword.value = '';
+            inpExpires.value = '';
+            inpHwid.value = '';
+            selectedUsername = null;
+            setUserBtnsEnabled(false);
+            
+            // Clear selection
+            [...usersTableBody.querySelectorAll("tr")].forEach(r => r.classList.remove("selected"));
+        }
+
+        function updateUserStats() {
+            if (!selectedFile) {
+                statTotal.textContent = '0';
+                statActive.textContent = '0';
+                statBanned.textContent = '0';
+                statExpired.textContent = '0';
+                return;
+            }
+            
+            const users = selectedFile.data.users || [];
+            const now = new Date();
+            
+            const total = users.length;
+            const active = users.filter(u => !u.IsBanned && (!u.Expires || new Date(u.Expires) > now)).length;
+            const banned = users.filter(u => u.IsBanned).length;
+            const expired = users.filter(u => !u.IsBanned && u.Expires && new Date(u.Expires) <= now).length;
+            
+            statTotal.textContent = total;
+            statActive.textContent = active;
+            statBanned.textContent = banned;
+            statExpired.textContent = expired;
+        }
+
+        // Update app info panel
+        function updateAppInfo() {
+            if (selectedFile) {
+                appInfoPanel.style.display = 'block';
+                infoAppName.textContent = selectedFile.name;
+                infoOwner.textContent = selectedFile.ownerEmail || 'Unknown';
+                infoCollection.textContent = `${selectedFile.adminId}`;
+            } else {
+                appInfoPanel.style.display = 'none';
+                infoAppName.textContent = '-';
+                infoOwner.textContent = '-';
+                infoCollection.textContent = '-';
+            }
+        }
+
+        // Render users
+        function renderUsers() {
+            usersTableBody.innerHTML = '';
+            if (!selectedFile) {
+                userCount.textContent = '0';
+                updateUserStats();
+                return;
+            }
+            
+            const users = selectedFile.data.users || [];
+            const filtered = users.filter(u => 
+                u.Username && u.Username.toLowerCase().includes(filterText.toLowerCase())
+            );
+            
+            userCount.textContent = filtered.length;
+            
+            filtered.forEach(u => {
+                const tr = document.createElement('tr');
+                
+                // Determine status
+                let status = 'Active';
+                let statusClass = 'badge-success';
+                
+                if (u.IsBanned) {
+                    status = 'Banned';
+                    statusClass = 'badge-danger';
+                } else if (u.Expires && new Date(u.Expires) <= new Date()) {
+                    status = 'Expired';
+                    statusClass = 'badge-warning';
+                }
+                
+                tr.innerHTML = `
+                    <td>${u.Username}</td>
+                    <td>${u.HWID ? u.HWID.substring(0, 8) + '...' : 'Not set'}</td>
+                    <td>${u.Expires || 'Never'}</td>
+                    <td><span class="badge ${statusClass}">${status}</span></td>
+                `;
+                
+                tr.addEventListener('dblclick', () => {
+                    selectedUsername = u.Username;
+                    inpUsername.value = u.Username;
+                    inpPassword.value = '';
+                    inpExpires.value = u.Expires || '';
+                    inpHwid.value = u.HWID || '';
+                    setUserBtnsEnabled(true);
+                });
+                
+                tr.addEventListener('click', () => {
+                    selectedUsername = u.Username;
+                    setUserBtnsEnabled(true);
+                    [...usersTableBody.querySelectorAll("tr")].forEach(r => r.classList.remove("selected"));
+                    tr.classList.add("selected");
+                });
+                
+                usersTableBody.appendChild(tr);
+            });
+            
+            setUserBtnsEnabled(!!selectedUsername);
+            updateUserStats();
+        }
+
+        // Render apps/files
+        async function renderFiles() {
+            try {
+                filesTableBody.innerHTML = '';
+                
+                if (currentAdminRole === "superadmin") {
+                    // Superadmin can see all apps from all admins
+                    const allAdmins = await ls.getAdmins();
+                    for (const admin of allAdmins) {
+                        const adminHeader = document.createElement('tr');
+                        adminHeader.innerHTML = `<td colspan="2" style="background: rgba(0,0,0,0.2); font-weight: bold; color: var(--primary);">${admin.email} (${admin.role})</td>`;
+                        filesTableBody.appendChild(adminHeader);
+                        
+                        const files = await ls.readAllFiles(admin.id);
+                        for (const f of files) {
+                            const paused = f.data.root?.Pause;
+                            const tr = document.createElement('tr');
+                            tr.innerHTML = `
+                                <td>${f.name}</td>
+                                <td>${paused ? '<span class="badge badge-warning">Paused</span>' : '<span class="badge badge-success">Active</span>'}</td>
+                            `;
+                            
+                            tr.addEventListener('click', async () => {
+                                try {
+                                    // Check if current user has access to this admin's apps
+                                    if (currentAdminRole !== "superadmin" && admin.id !== currentUser.uid) {
+                                        showNotification(userNotification, "You don't have permission to access this app", true);
+                                        return;
+                                    }
+                                    
+                                    const data = await ls.readFile(admin.id, f.name);
+                                    selectedFile = { 
+                                        name: f.name, 
+                                        adminId: admin.id, 
+                                        ownerEmail: admin.email,
+                                        data 
+                                    };
+                                    currentFile.textContent = "— " + f.name + ` (${admin.email})`;
+                                    btnDeleteFile.disabled = false;
+                                    clearUserForm();
+                                    updateAppInfo();
+                                    renderUsers();
+                                    [...filesTableBody.querySelectorAll("tr")].forEach(r => r.classList.remove("selected"));
+                                    tr.classList.add("selected");
+                                } catch (error) {
+                                    console.error("Error loading file:", error);
+                                    showNotification(userNotification, "Error loading application data", true);
+                                }
+                            });
+                            
+                            filesTableBody.appendChild(tr);
+                        }
+                    }
+                } else {
+                    // Regular admin can only see their own apps
+                    const files = await ls.readAllFiles(currentUser.uid);
+                    for (const f of files) {
+                        const paused = f.data.root?.Pause;
+                        const tr = document.createElement('tr');
+                        tr.innerHTML = `
+                            <td>${f.name}</td>
+                            <td>${paused ? '<span class="badge badge-warning">Paused</span>' : '<span class="badge badge-success">Active</span>'}</td>
+                        `;
+                        
+                        tr.addEventListener('click', async () => {
+                            try {
+                                const data = await ls.readFile(currentUser.uid, f.name);
+                                selectedFile = { 
+                                    name: f.name, 
+                                    adminId: currentUser.uid, 
+                                    ownerEmail: currentUser.email,
+                                    data 
+                                };
+                                currentFile.textContent = "— " + f.name;
+                                btnDeleteFile.disabled = false;
+                                clearUserForm();
+                                updateAppInfo();
+                                renderUsers();
+                                [...filesTableBody.querySelectorAll("tr")].forEach(r => r.classList.remove("selected"));
+                                tr.classList.add("selected");
+                            } catch (error) {
+                                console.error("Error loading file:", error);
+                                showNotification(userNotification, "Error loading application data", true);
+                            }
+                        });
+                        
+                        filesTableBody.appendChild(tr);
+                    }
+                }
+            } catch (error) {
+                console.error("Error loading files:", error);
+                showNotification(userNotification, "Error loading applications", true);
+            }
+        }
+
+        // Render admin list
+        async function renderAdmins() {
+            try {
+                adminTableBody.innerHTML = '';
+                
+                // Only superadmin can manage other admins
+                if (currentAdminRole !== "superadmin") {
+                    adminTableBody.innerHTML = `<tr><td colspan="3" style="text-align: center; padding: 20px;">Only superadmin can manage administrators</td></tr>`;
+                    return;
+                }
+                
+                const admins = await ls.getAdmins();
+                
+                for (const admin of admins) {
+                    const tr = document.createElement('tr');
+                    
+                    tr.innerHTML = `
+                        <td>${admin.email}</td>
+                        <td>${admin.role}</td>
+                        <td>
+                            <button class="btn btn-sm btn-primary select-admin" data-id="${admin.id}" data-email="${admin.email}" data-role="${admin.role}">Select</button>
+                        </td>
+                    `;
+                    
+                    adminTableBody.appendChild(tr);
+                }
+                
+                // Add event listeners to select buttons
+                document.querySelectorAll('.select-admin').forEach(btn => {
+                    btn.addEventListener('click', () => {
+                        selectedAdmin = {
+                            id: btn.getAttribute('data-id'),
+                            email: btn.getAttribute('data-email'),
+                            role: btn.getAttribute('data-role')
+                        };
+                        
+                        adminEmail.value = selectedAdmin.email;
+                        adminRoleSelect.value = selectedAdmin.role;
+                        
+                        btnUpdateAdmin.disabled = false;
+                        btnDeleteAdmin.disabled = false;
+                    });
+                });
+            } catch (error) {
+                console.error("Error loading admins:", error);
+                showNotification(adminNotification, "Error loading administrators", true);
+            }
+        }
+
+        // Save users to Firestore
+        async function saveUsers() {
+            if (!selectedFile) return;
+            
+            try {
+                await ls.writeFile(selectedFile.adminId, selectedFile.name, selectedFile.data);
+                renderUsers();
+                showNotification(userNotification, "Changes saved successfully");
+            } catch (error) {
+                console.error("Error saving users:", error);
+                showNotification(userNotification, "Error saving changes", true);
+            }
+        }
+
+        // Login
+        btnLogin.addEventListener('click', async () => {
+            const email = loginEmail.value.trim();
+            const password = loginPassword.value;
+            
+            if (!email || !password) {
+                showNotification(loginNotification, "Please enter both email and password", true);
+                return;
+            }
+            
+            try {
+                showNotification(loginNotification, "Logging in...");
+                await signInWithEmailAndPassword(auth, email, password);
+                showNotification(loginNotification, "Login successful!");
+            } catch (e) {
+                console.error("Login error:", e);
+                showNotification(loginNotification, "Invalid email or password!", true);
+            }
+        });
+
+        // Logout
+        logoutBtn.addEventListener('click', async () => {
+            try {
+                await signOut(auth);
+                showNotification(loginNotification, "Logged out successfully");
+            } catch (error) {
+                console.error("Logout error:", error);
+                showNotification(loginNotification, "Error during logout", true);
+            }
+        });
+
+        // Auth state listener
+        onAuthStateChanged(auth, async (user) => {
+            if (user) {
+                loginPage.style.display = 'none';
+                appPage.style.display = 'block';
+                userEmail.textContent = user.email;
+                currentUser = user;
+                
+                // Get admin role
+                const adminData = await ls.getAdmin(user.uid);
+                if (adminData) {
+                    currentAdminRole = adminData.role;
+                    // Show admin tab only for superadmin
+                    if (adminData.role === "superadmin") {
+                        document.querySelector('[data-tab="admin"]').style.display = 'block';
+                    } else {
+                        document.querySelector('[data-tab="admin"]').style.display = 'none';
+                    }
+                } else {
+                    // If user is not in admins collection, create a basic admin entry
+                    await setDoc(doc(db, "admins", user.uid), {
+                        email: user.email,
+                        role: "admin",
+                        createdAt: serverTimestamp()
+                    });
+                    currentAdminRole = "admin";
+                    document.querySelector('[data-tab="admin"]').style.display = 'none';
+                }
+                
+                renderFiles();
+                renderAdmins();
+            } else {
+                loginPage.style.display = 'flex';
+                appPage.style.display = 'none';
+                clearUserForm();
+                selectedFile = null;
+                currentFile.textContent = "— No App Selected";
+                currentUser = null;
+                currentAdminRole = "user";
+                updateAppInfo();
+            }
+        });
+
+        // Button logic
+        btnAdd.onclick = async () => {
+            if (!selectedFile) {
+                showNotification(userNotification, "Please select an application first", true);
+                return;
+            }
+            
+            const username = inpUsername.value.trim();
+            const password = inpPassword.value;
+            const expires = inpExpires.value;
+            const hwid = inpHwid.value.trim();
+            
+            if (!username) {
+                showNotification(userNotification, "Please enter a username", true);
+                return;
+            }
+            
+            if (!password) {
+                showNotification(userNotification, "Please enter a password", true);
+                return;
+            }
+            
+            // Check if username already exists
+            const users = selectedFile.data.users || [];
+            if (users.some(u => u.Username === username)) {
+                showNotification(userNotification, "Username already exists", true);
+                return;
+            }
+            
+            const user = {
+                Username: username,
+                PasswordHash: password, // In a real app, you should hash this
+                HWID: hwid || null,
+                Expires: expires || null,
+                IsBanned: false
+            };
+            
+            selectedFile.data.users = users;
+            selectedFile.data.users.push(user);
+            await saveUsers();
+            clearUserForm();
+        };
+
+        btnUpdate.onclick = async () => {
+            if (!selectedFile || !selectedUsername) return;
+            
+            const username = inpUsername.value.trim();
+            const password = inpPassword.value;
+            const expires = inpExpires.value;
+            const hwid = inpHwid.value.trim();
+            
+            if (!username) {
+                showNotification(userNotification, "Please enter a username", true);
+                return;
+            }
+            
+            const users = selectedFile.data.users;
+            const idx = users.findIndex(u => u.Username === selectedUsername);
+            
+            if (idx < 0) return;
+            
+            // Check if new username already exists (and it's not the current user)
+            if (username !== selectedUsername && users.some(u => u.Username === username)) {
+                showNotification(userNotification, "Username already exists", true);
+                return;
+            }
+            
+            users[idx].Username = username;
+            if (password) users[idx].PasswordHash = password; // Hash in real app
+            users[idx].Expires = expires || null;
+            users[idx].HWID = hwid || null;
+            
+            await saveUsers();
+            selectedUsername = username;
+        };
+
+        btnDelete.onclick = async () => {
+            if (!selectedFile || !selectedUsername) return;
+            
+            if (!confirm(`Are you sure you want to delete user "${selectedUsername}"?`)) {
+                return;
+            }
+            
+            selectedFile.data.users = selectedFile.data.users.filter(u => u.Username !== selectedUsername);
+            clearUserForm();
+            await saveUsers();
+        };
+
+        btnBan.onclick = async () => {
+            const u = selectedFile.data.users.find(x => x.Username === selectedUsername);
+            if (u) {
+                u.IsBanned = true;
+                await saveUsers();
+            }
+        };
+
+        btnUnban.onclick = async () => {
+            const u = selectedFile.data.users.find(x => x.Username === selectedUsername);
+            if (u) {
+                u.IsBanned = false;
+                await saveUsers();
+            }
+        };
+
+        btnResetHWID.onclick = async () => {
+            const u = selectedFile.data.users.find(x => x.Username === selectedUsername);
+            if (u) {
+                u.HWID = null;
+                await saveUsers();
+            }
+        };
+
+        inpSearch.addEventListener('input', () => {
+            filterText = inpSearch.value;
+            renderUsers();
+        });
+
+        btnCreateFile.onclick = async () => {
+            const name = inpFileName.value.trim();
+            
+            if (!name) {
+                showNotification(userNotification, "Please enter an application name", true);
+                return;
+            }
+            
+            // Check if app already exists
+            const files = await ls.readAllFiles(currentUser.uid);
+            if (files.some(f => f.name === name)) {
+                showNotification(userNotification, "Application already exists", true);
+                return;
+            }
+            
+            try {
+                await ls.writeFile(currentUser.uid, name, { users: [], root: { Pause: false } });
+                inpFileName.value = '';
+                await renderFiles();
+                showNotification(userNotification, `Application "${name}" created`);
+            } catch (error) {
+                console.error("Error creating app:", error);
+                showNotification(userNotification, "Error creating application", true);
+            }
+        };
+
+        btnDeleteFile.onclick = async () => {
+            if (!selectedFile) return;
+            
+            if (!confirm(`Are you sure you want to delete application "${selectedFile.name}"? This will delete all users!`)) {
+                return;
+            }
+            
+            try {
+                await ls.deleteFile(selectedFile.adminId, selectedFile.name);
+                selectedFile = null;
+                currentFile.textContent = "— No App Selected";
+                btnDeleteFile.disabled = true;
+                usersTableBody.innerHTML = '';
+                updateAppInfo();
+                await renderFiles();
+                showNotification(userNotification, `Application deleted`);
+            } catch (error) {
+                console.error("Error deleting app:", error);
+                showNotification(userNotification, "Error deleting application", true);
+            }
+        };
+
+        btnRefreshFiles.onclick = () => renderFiles();
+
+        btnPause.onclick = async () => {
+            if (!selectedFile) return;
+            
+            try {
+                await ls.updateFile(selectedFile.adminId, selectedFile.name, { "root.Pause": true });
+                selectedFile.data.root = selectedFile.data.root || {};
+                selectedFile.data.root.Pause = true;
+                await renderFiles();
+                showNotification(userNotification, "Application paused");
+            } catch (error) {
+                console.error("Error pausing app:", error);
+                showNotification(userNotification, "Error pausing application", true);
+            }
+        };
+
+        btnResume.onclick = async () => {
+            if (!selectedFile) return;
+            
+            try {
+                await ls.updateFile(selectedFile.adminId, selectedFile.name, { "root.Pause": false });
+                selectedFile.data.root = selectedFile.data.root || {};
+                selectedFile.data.root.Pause = false;
+                await renderFiles();
+                showNotification(userNotification, "Application resumed");
+            } catch (error) {
+                console.error("Error resuming app:", error);
+                showNotification(userNotification, "Error resuming application", true);
+            }
+        };
+
+        // Admin management functions
+        btnAddAdmin.onclick = async () => {
+            const email = adminEmail.value.trim();
+            const password = adminPassword.value;
+            const role = adminRoleSelect.value;
+            
+            if (!email || !password) {
+                showNotification(adminNotification, "Please enter both email and password", true);
+                return;
+            }
+            
+            try {
+                await ls.addAdmin(email, password, role);
+                showNotification(adminNotification, `Admin ${email} added successfully`);
+                adminEmail.value = '';
+                adminPassword.value = '';
+                renderAdmins();
+            } catch (error) {
+                console.error("Error adding admin:", error);
+                showNotification(adminNotification, "Error adding admin", true);
+            }
+        };
+
+        btnUpdateAdmin.onclick = async () => {
+            if (!selectedAdmin) return;
+            
+            const role = adminRoleSelect.value;
+            
+            try {
+                await ls.updateAdmin(selectedAdmin.id, { role: role });
+                showNotification(adminNotification, `Admin ${selectedAdmin.email} updated successfully`);
+                selectedAdmin = null;
+                adminEmail.value = '';
+                adminPassword.value = '';
+                btnUpdateAdmin.disabled = true;
+                btnDeleteAdmin.disabled = true;
+                renderAdmins();
+            } catch (error) {
+                console.error("Error updating admin:", error);
+                showNotification(adminNotification, "Error updating admin", true);
+            }
+        };
+
+        btnDeleteAdmin.onclick = async () => {
+            if (!selectedAdmin) return;
+            
+            if (!confirm(`Are you sure you want to remove ${selectedAdmin.email} as admin?`)) {
+                return;
+            }
+            
+            try {
+                await ls.deleteAdmin(selectedAdmin.id);
+                showNotification(adminNotification, `Admin ${selectedAdmin.email} removed successfully`);
+                selectedAdmin = null;
+                adminEmail.value = '';
+                adminPassword.value = '';
+                btnUpdateAdmin.disabled = true;
+                btnDeleteAdmin.disabled = true;
+                renderAdmins();
+            } catch (error) {
+                console.error("Error deleting admin:", error);
+                showNotification(adminNotification, "Error deleting admin", true);
+            }
+        };
+
+        // Theme toggle
+        themeToggle.addEventListener('click', () => {
+            if (themeToggle.innerHTML.includes('fa-moon')) {
+                themeToggle.innerHTML = '<i class="fas fa-sun"></i>';
+                document.body.style.background = 'linear-gradient(135deg, #0f1a3d, #7a1631, #c97f1a)';
+            } else {
+                themeToggle.innerHTML = '<i class="fas fa-moon"></i>';
+                document.body.style.background = 'linear-gradient(135deg, var(--darker) 0%, var(--dark) 100%)';
+            }
+        });
+
+        // Allow pressing Enter to submit the login form
+        document.getElementById('loginPassword').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                document.getElementById('btnLogin').click();
+            }
+        });
+
+        // Demo account for testing
+        loginEmail.value = "admin@sg71.com";
+        loginPassword.value = "admin123";
+    </script>
+</body>
+</html>
